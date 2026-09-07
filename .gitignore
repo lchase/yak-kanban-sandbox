@@ -1,5 +1,6 @@
 node_modules/
 dist/
+harness.config.json
 .runs/
 .harness/
 *.log
