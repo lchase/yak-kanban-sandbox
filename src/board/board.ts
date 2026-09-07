@@ -1,20 +1,15 @@
 import { columnIsAtCapacity, columnOf, findColumn } from "./columns.js";
+import { BACKLOG, DONE, IN_PROGRESS, REVIEW } from "./column-names.js";
 import type { Board, Card } from "./types.js";
 
-/**
- * A fresh board with the four standard columns.
- *
- * NOTE (issue 05): the column names are magic strings, repeated here, in
- * {@link moveCard}, and in the UI. They want extracting into a shared
- * constants module.
- */
+/** A fresh board with the four standard columns. */
 export function createBoard(): Board {
   return {
     columns: [
-      { name: "Backlog", wipLimit: null, cards: [] },
-      { name: "In Progress", wipLimit: 2, cards: [] },
-      { name: "Review", wipLimit: 2, cards: [] },
-      { name: "Done", wipLimit: null, cards: [] },
+      { name: BACKLOG, wipLimit: null, cards: [] },
+      { name: IN_PROGRESS, wipLimit: 2, cards: [] },
+      { name: REVIEW, wipLimit: 2, cards: [] },
+      { name: DONE, wipLimit: null, cards: [] },
     ],
   };
 }
@@ -64,7 +59,7 @@ export function moveCard(
     throw new Error(`column "${toColumnName}" is at its WIP limit`);
   }
 
-  if (toColumnName === "Done") {
+  if (toColumnName === DONE) {
     to.cards.push(card);
     return;
   }

@@ -10,16 +10,17 @@
 import { describe, expect, it } from "vitest";
 import { findColumn } from "./columns.js";
 import { addCard, createBoard, makeCard, moveCard } from "./board.js";
+import { BACKLOG, IN_PROGRESS, REVIEW } from "./column-names.js";
 
 describe("issue 02 — WIP limit enforcement", () => {
   it("rejects the card that would exceed a column's WIP limit", () => {
     const board = createBoard();
-    const inProgress = findColumn(board, "In Progress")!; // wipLimit 2
+    const inProgress = findColumn(board, IN_PROGRESS)!; // wipLimit 2
 
-    addCard(board, "In Progress", makeCard("a"));
-    addCard(board, "In Progress", makeCard("b"));
+    addCard(board, IN_PROGRESS, makeCard("a"));
+    addCard(board, IN_PROGRESS, makeCard("b"));
 
-    expect(() => addCard(board, "In Progress", makeCard("c"))).toThrow(
+    expect(() => addCard(board, IN_PROGRESS, makeCard("c"))).toThrow(
       /WIP limit/,
     );
     expect(inProgress.cards).toHaveLength(2);
@@ -27,12 +28,12 @@ describe("issue 02 — WIP limit enforcement", () => {
 
   it("rejects a move that would exceed the target column's WIP limit", () => {
     const board = createBoard();
-    addCard(board, "Review", makeCard("a"));
-    addCard(board, "Review", makeCard("b"));
+    addCard(board, REVIEW, makeCard("a"));
+    addCard(board, REVIEW, makeCard("b"));
     const third = makeCard("c");
-    addCard(board, "Backlog", third);
+    addCard(board, BACKLOG, third);
 
-    expect(() => moveCard(board, third.id, "Review")).toThrow(/WIP limit/);
-    expect(findColumn(board, "Review")!.cards).toHaveLength(2);
+    expect(() => moveCard(board, third.id, REVIEW)).toThrow(/WIP limit/);
+    expect(findColumn(board, REVIEW)!.cards).toHaveLength(2);
   });
 });

@@ -11,18 +11,19 @@
 import { describe, expect, it } from "vitest";
 import { columnOf, findColumn } from "./columns.js";
 import { addCard, createBoard, makeCard, moveCard } from "./board.js";
+import { BACKLOG, DONE } from "./column-names.js";
 
 describe("issue 01 — moving a card to Done", () => {
   it("moves the card to Done without leaving a copy in its old column", () => {
     const board = createBoard();
     const card = makeCard("finish the feature");
-    addCard(board, "Backlog", card);
+    addCard(board, BACKLOG, card);
 
-    moveCard(board, card.id, "Done");
+    moveCard(board, card.id, DONE);
 
-    expect(findColumn(board, "Done")!.cards).toContain(card);
-    expect(findColumn(board, "Backlog")!.cards).not.toContain(card);
-    expect(columnOf(board, card.id)?.name).toBe("Done");
+    expect(findColumn(board, DONE)!.cards).toContain(card);
+    expect(findColumn(board, BACKLOG)!.cards).not.toContain(card);
+    expect(columnOf(board, card.id)?.name).toBe(DONE);
     // The card must exist exactly once across the whole board.
     const copies = board.columns
       .flatMap((c) => c.cards)

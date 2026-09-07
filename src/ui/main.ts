@@ -1,13 +1,20 @@
-import { addCard, createBoard, makeCard, moveCard } from "../board/index.js";
+import {
+  addCard,
+  BACKLOG,
+  createBoard,
+  IN_PROGRESS,
+  makeCard,
+  moveCard,
+} from "../board/index.js";
 import { renderBoard } from "./render.js";
 
 const root = document.getElementById("board");
 if (!root) throw new Error("missing #board mount point");
 
 const board = createBoard();
-addCard(board, "Backlog", makeCard("Draft the RUNBOOK", ["docs"]));
-addCard(board, "Backlog", makeCard("Wire the harness config", ["infra"]));
-addCard(board, "In Progress", makeCard("Fix the Done duplication", ["bug"]));
+addCard(board, BACKLOG, makeCard("Draft the RUNBOOK", ["docs"]));
+addCard(board, BACKLOG, makeCard("Wire the harness config", ["infra"]));
+addCard(board, IN_PROGRESS, makeCard("Fix the Done duplication", ["bug"]));
 
 function paint(): void {
   renderBoard(root as HTMLElement, board, (cardId, toColumn) => {
