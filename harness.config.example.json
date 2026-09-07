@@ -1,0 +1,6 @@
+{
+  "repo": "lchase/yak-kanban-sandbox",
+  "yakRepoPath": "/ABSOLUTE/PATH/TO/your/yak-kanban-sandbox",
+  "stalledAfterMinutes": 30,
+  "workflow": "implement-change"
+}
