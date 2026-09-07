@@ -10,12 +10,12 @@ treated as "you may exceed it by one".
 
 ```
 npm install
-npm test -- known-bugs
+npm run test:bugs
 ```
 
-`issue 02 — WIP limit enforcement` fails: a third `addCard` into a
-limit-2 column does not throw, and a `moveCard` into a full column is
-allowed.
+`src/board/issue-02.bug.test.ts` fails: a third `addCard` into a limit-2
+column does not throw, and a `moveCard` into a full column is allowed.
+(`npm test` excludes the `*.bug.test.ts` pins, so it is green at `seed`.)
 
 ## Expected
 
@@ -31,3 +31,5 @@ column unchanged. `wipLimit: null` stays unlimited.
   `src/board/columns.ts` and the column config in `createBoard`.
 - Low confidence that the one-line comparison flip is the whole story —
   check every caller of `columnIsAtCapacity`.
+- When fixed, promote `src/board/issue-02.bug.test.ts` into the normal
+  suite (rename to `src/board/wip-limit.test.ts`, drop the `.bug`).

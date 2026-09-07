@@ -16,19 +16,21 @@ seed issues  →  ticks drive yak runs  →  inspect PRs  →  reset to pristine
 
 ## 1. Confirm the pristine state
 
-On the `seed` tag, the three workflow checks must behave like this:
+On the `seed` tag:
 
 ```bash
 git checkout seed
 npm install
+npm test            # exits 0 — the workflow's `integrate` check
 npm run typecheck   # exits 0
 npm run build       # exits 0
-npm test            # exits 1 — src/board/known-bugs.test.ts is RED by design
+npm run test:bugs   # exits 1 — src/board/*.bug.test.ts, RED by design
 ```
 
-`known-bugs.test.ts` pins issues 01 and 02. Every other test passes. If
-anything else is red, the checkout is not pristine — run
-`scripts/reset.sh`.
+`npm test` excludes the `*.bug.test.ts` pins so a fix for a single issue
+can green it (each `yak run` works one issue in its own worktree). The
+two pins live in `npm run test:bugs`. If `npm test` is red on a fresh
+`seed` checkout, it is not pristine — run `scripts/reset.sh`.
 
 ## 2. Seed the backlog
 
@@ -88,7 +90,8 @@ The next tick parses it and resumes the run.
 ## 6. Inspect the PRs
 
 Each finished run opens a PR against `main`. For issues 01 and 02 the
-PR should turn `known-bugs.test.ts` green. Review, then either merge
+PR should turn the issue's `*.bug.test.ts` pin green (promoted into the
+normal suite). Review, then either merge
 (harness moves the issue to `yak:done`) or close.
 
 ## 7. Reset
@@ -105,13 +108,13 @@ clean slate (the harness never closes issues — spec §10 invariant 10).
 ## Smoke-testing the workflow without the harness
 
 Independent of the tick loop, a single run against this checkout should
-drive the localized bug to green:
+drive the localized bug (issue 01) to a green `verify` and an open PR:
 
 ```bash
-yak run <path-to>/implement-change.yaml --isolation worktree \
+yak run <yak-harness>/workflows/implement-change.yaml --isolation worktree \
   --input issueRef=lchase/yak-kanban-sandbox#1
 ```
 
-> **Status:** pending the `implement-change` workflow YAML and
-> `yak run --input` landing in yak. The sandbox, its defects, and its
-> issues do not depend on either.
+The workflow ships with yak-harness (`workflows/implement-change.yaml`);
+the harness itself resolves the bare name `implement-change` to that
+path. Needs yak ≥ 0.3.0 (for `--input`).

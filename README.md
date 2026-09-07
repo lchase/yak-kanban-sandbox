@@ -36,9 +36,8 @@ carrying the `yak` label) **and** a real defect or gap in the code.
 | 04 | persist the board to localStorage | feature, design fork | `design-review` is a genuine decision |
 | 05 | extract column-name magic strings into a constants module | chore | `assess.kind = 'chore'`, minimal path |
 
-Issues 01 and 02 ship with a failing test that pins the defect
-(`src/board/known-bugs.test.ts`). Issues 03–05 have no test yet — the
-workflow writes them.
+Issues 01 and 02 ship with a failing pin (`src/board/issue-0N.bug.test.ts`).
+Issues 03–05 have no test yet — the workflow writes them.
 
 ## State on the `seed` tag
 
@@ -46,9 +45,13 @@ workflow writes them.
 
 | command | result |
 |---|---|
-| `npm run typecheck` | passes |
+| `npm test` | **passes** — `*.bug.test.ts` pins are excluded so a single-issue fix can green the suite |
+| `npm run typecheck` | passes (does include the `.bug` files) |
 | `npm run build` | passes |
-| `npm test` | **fails** — only `known-bugs.test.ts` is red, by design |
+| `npm run test:bugs` | **fails** — the two defect pins, RED by design |
+
+A workflow run that fixes issue 01 or 02 makes its pin pass and promotes
+it into the normal suite (drops the `.bug`).
 
 ## Running the loop
 
@@ -66,7 +69,7 @@ scripts/reset.sh                                    # back to pristine
 
 ```
 src/board/     pure board logic + its tests
-src/board/known-bugs.test.ts   the RED-by-design bug pins
+src/board/*.bug.test.ts        the RED-by-design defect pins (npm run test:bugs)
 src/ui/        thin DOM layer
 issues/        one Markdown body per seeded issue
 scripts/       seed-issues.sh, reset.sh

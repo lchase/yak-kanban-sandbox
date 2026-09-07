@@ -13,11 +13,12 @@ From a fresh clone:
 
 ```
 npm install
-npm test -- known-bugs
+npm run test:bugs
 ```
 
-`issue 01 — moving a card to Done` fails: after `moveCard(board, id, "Done")`
-the card exists twice on the board.
+`src/board/issue-01.bug.test.ts` fails: after `moveCard(board, id, "Done")`
+the card exists twice on the board. (`npm test` excludes the `*.bug.test.ts`
+pins, so it is green at `seed`.)
 
 ## Expected
 
@@ -28,5 +29,7 @@ like moving anywhere else: added to the target, removed from the source.
 
 - Localized, high-confidence fix — the defect is a single early-return
   branch in `src/board/board.ts`.
-- The bug-pinning test in `src/board/known-bugs.test.ts` already
-  describes the expected behaviour; make it green without weakening it.
+- `src/board/issue-01.bug.test.ts` already describes the expected
+  behaviour. Make it pass without weakening it, then promote it into the
+  normal suite: rename it to `src/board/done-move.test.ts` (drop the
+  `.bug`) so it runs under `npm test` as the regression test.
