@@ -42,10 +42,6 @@ export function addCard(board: Board, columnName: string, card: Card): void {
 /**
  * Move the card with `cardId` to the column named `toColumnName`.
  * Throws if the card or the target column cannot be found.
- *
- * NOTE (issue 01): moving a card to "Done" leaves a copy behind in its
- * original column — the early return below skips the removal step that
- * every other target runs.
  */
 export function moveCard(
   board: Board,
@@ -62,11 +58,6 @@ export function moveCard(
 
   if (columnIsAtCapacity(to)) {
     throw new Error(`column "${toColumnName}" is at its WIP limit`);
-  }
-
-  if (toColumnName === "Done") {
-    to.cards.push(card);
-    return;
   }
 
   to.cards.push(card);
